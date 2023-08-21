@@ -237,15 +237,14 @@ public class TicTacToe {
 
                 while (true) {
                     //position joueur
-                    System.out.println("Entrez votre position (1-9)");
-                    int positionJoueur = scan.nextInt();
-                    while (joueur1.getPositions().contains(positionJoueur) || joueur2.getPositions().contains(positionJoueur)) {
-                        System.out.println("La position est deja prise! Entrez une position disponible :");
-                        positionJoueur = scan.nextInt();
-                        System.out.println();
-                    }
-                    System.out.println(positionJoueur);
-
+                    int positionJoueur = joueur1.entrerPosition(joueur1, scan);
+//                    int positionJoueur = scan.nextInt();
+//                    while (joueur1.getPositions().contains(positionJoueur) || joueur2.getPositions().contains(positionJoueur)) {
+//                        System.out.println("La position est deja prise! Entrez une position disponible :");
+//                        positionJoueur = scan.nextInt();
+//                        System.out.println();
+//                    }
+//                    System.out.println(positionJoueur);
                     placerSymbole(gameBoard, positionJoueur, joueur1);
 
                     imprimerGameBoard(gameBoard);

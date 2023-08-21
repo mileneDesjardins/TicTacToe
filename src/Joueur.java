@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Joueur {
+    private static String ENTRER_POSITION = "%s Entrez votre position (1-9)";
+
     private String nom;
     private int nbVictoire;
     private char symbole;
@@ -22,6 +24,10 @@ public class Joueur {
         }
     }
 
+    public String getNom(Joueur joueur){
+        return nom;
+    }
+
     public void setSymbole(char symbole) {
         if (symbole > 'A' && symbole > 'Z') {
             this.symbole = symbole;
@@ -32,8 +38,8 @@ public class Joueur {
         this.positions.add(position);
     }
 
-    public int entrerPosition(Scanner scan, Joueur joueur) {
-        System.out.println("Entrez votre position (1-9)");
+    public int entrerPosition(Joueur joueur, Scanner scan) {
+        System.out.printf(ENTRER_POSITION, nom);
         int positionJoueur = scan.nextInt();
         while (this.getPositions().contains(positionJoueur) || joueur.getPositions().contains(positionJoueur)) {
             System.out.println("La position est deja prise! Entrez une position disponible :");
@@ -42,6 +48,10 @@ public class Joueur {
         }
         return positionJoueur;
     }
+
+
+
+
 
     public void incrementerNbVictoire() {
         this.nbVictoire += 1;
