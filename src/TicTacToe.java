@@ -19,6 +19,9 @@ public class TicTacToe {
     public static final String LEGENDE_SYMBOLE = "(A à Z)";
     public static final String LEGENDE_SYMBOLE_ORDI = "(A à Z excepté 0)";
     public static final String SYMBOLE_INVALIDE = "Le symbole saisi ne respectent pas l'intervalle donnée!";
+    //PARTIE
+    public static final String AUTRE_PARTIE = "Souhaitez-vous jouer une autre partie?";
+    public static final String LEGENDE_OUI_NON = "(O ou o pour oui, N ou n pour non)";
 
     public static void afficherMenu() {
         int choix;
@@ -180,22 +183,21 @@ public class TicTacToe {
     public static char jouerUneAutrePartie(Scanner scan) {
         System.out.println();
         char reponse = ' ';
-        System.out.println("Souhaitez-vous jouer une autre partie?");
-        System.out.print("(O ou o pour oui, N ou n pour non)");
+        System.out.println(AUTRE_PARTIE);
+        System.out.print(LEGENDE_OUI_NON);
         reponse = scan.next().charAt(0);
         while (reponse != 'O' && reponse != 'o' && reponse != 'N' && reponse != 'n') {
             System.out.println();
             System.out.println("La réponse entrée est invalide");
             System.out.println();
-            System.out.println("Souhaitez-vous jouer une autre partie?");
-            System.out.println("(O ou o pour oui, N ou n pour non)");
+            System.out.println(AUTRE_PARTIE);
+            System.out.println(LEGENDE_OUI_NON);
             reponse = scan.next().charAt(0);
         }
         return reponse;
     }
 
     public static void main(String[] args) {
-        //Déclaration des variables
         Scanner scan = new Scanner(System.in);
         int choixMenu = 0;
         String nomJoueur1 = "";
@@ -213,7 +215,7 @@ public class TicTacToe {
         switch (choixMenu) {
             case 1:
                 nomJoueur1 = saisirNomJoueur(scan, 1);
-                symbole1 = saisirSymbole(1,scan, nomJoueur1);
+                symbole1 = saisirSymbole(1, scan, nomJoueur1);
 
                 Joueur joueur1 = new Joueur(nomJoueur1, symbole1);
                 Joueur joueur2 = new Joueur("Ordinateur", 'O');
@@ -243,7 +245,15 @@ public class TicTacToe {
                             break;
                         }
                     }
+                    reponse = jouerUneAutrePartie(scan);
+                    if (reponse != 'N' && reponse != 'n') {
+                        resultat = "";
+                        joueur1.getPositions().clear();
+                        joueur2.getPositions().clear();
+                        gameBoard = new char[][]{{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}};
+                    }
                 }
+                break;
 
             case 2:
                 nomJoueur1 = saisirNomJoueur(scan, 1);
@@ -278,15 +288,18 @@ public class TicTacToe {
                             break;
                         }
                     }
-                    reponse = jouerUneAutrePartie(scan);
-                    resultat = "";
-                    joueur1.getPositions().clear();
-                    joueur2.getPositions().clear();
-                    gameBoard = new char[][]{{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}};
+                    if (reponse != 'N' && reponse != 'n') {
+                        reponse = jouerUneAutrePartie(scan);
+                        resultat = "";
+                        joueur1.getPositions().clear();
+                        joueur2.getPositions().clear();
+                        gameBoard = new char[][]{{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}};
+                    }
                 }
-                System.out.println();
-                System.out.println("À la prochaine!!!");
+
         }
+        System.out.println();
+        System.out.println("À la prochaine!!!");
     }
 
     private static int placerPositionOrdinateur(Joueur joueur1, Joueur joueur2, Random aleatoire, int positionOrdinateur) {
