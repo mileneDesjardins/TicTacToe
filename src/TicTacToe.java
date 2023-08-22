@@ -245,9 +245,8 @@ public class TicTacToe {
                 joueur1 = new Joueur(nomJoueur1, symbole1);
                 joueur2 = new Joueur(nomJoueur2, symbole2);
 
-                imprimerGameBoard(gameBoard);
-
                 while (reponse != 'N' && reponse != 'n') {
+                    imprimerGameBoard(gameBoard);
                     while (resultat.equals("")) {
                         int positionJoueur1 = joueur1.entrerPosition(joueur1, scan);
                         placerSymbole(gameBoard, positionJoueur1, joueur1);
@@ -271,6 +270,9 @@ public class TicTacToe {
                     }
                     reponse = jouerUneAutrePartie(scan);
                     resultat = "";
+                    joueur1.getPositions().clear();
+                    joueur2.getPositions().clear();
+                    gameBoard = new char[][]{{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}, {' ', '|', ' ', '|', ' '}};
                 }
                 System.out.println();
                 System.out.println("À la prochaine!!!");
@@ -280,7 +282,6 @@ public class TicTacToe {
     private static void imprimerResultat(char[][] gameBoard, String resultat) {
         if (resultat.length() > 0) {
             System.out.println();
-            imprimerGameBoard(gameBoard);
             System.out.println(resultat);
         }
     }
