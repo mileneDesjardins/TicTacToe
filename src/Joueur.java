@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Joueur {
-    private static String ENTRER_POSITION = "%s Entrez votre position (1-9)";
+    private static String ENTRER_POSITION = "%s Entrez votre position (1-9): ";
 
     private String nom;
     private int nbVictoire;

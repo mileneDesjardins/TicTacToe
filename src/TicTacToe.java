@@ -19,7 +19,7 @@ public class TicTacToe {
     public static final String LEGENDE_SYMBOLE = "(A à Z)";
     public static final String SYMBOLE_INVALIDE = "Le symbole saisi ne respectent pas l'intervalle donnée!";
 
-    public static void afficherMenu(){
+    public static void afficherMenu() {
         int choix;
         System.out.println(BORDURE_BIENVENUE);
         System.out.println(TITRE);
@@ -53,8 +53,7 @@ public class TicTacToe {
         return choix;
     }
 
-    public static String saisirNomJoueur(Scanner scan, int noJoueur){
-//        String nomJoueur = "";
+    public static String saisirNomJoueur(Scanner scan, int noJoueur) {
         System.out.println();
         System.out.printf(NOM_JOUEUR, noJoueur);
         String nomJoueur = scan.nextLine();
@@ -90,7 +89,8 @@ public class TicTacToe {
             System.out.println(MESSAGE_SYMBOLE);
             System.out.println(LEGENDE_SYMBOLE);
             symbole = scan.next().charAt(0);
-        } return symbole;
+        }
+        return symbole;
     }
 
     public static void imprimerGameBoard(char[][] gameBoard) {
@@ -120,6 +120,7 @@ public class TicTacToe {
     }
 
     public static String determinerGagnant(Joueur joueur1, Joueur joueur2) {
+        String resultat = "";
         List<Integer> rangeeHaut = Arrays.asList(1, 2, 3);
         List<Integer> rangeeMilieu = Arrays.asList(4, 5, 6);
         List<Integer> rangeeBas = Arrays.asList(7, 8, 9);
@@ -129,6 +130,25 @@ public class TicTacToe {
         List<Integer> diagonale1 = Arrays.asList(1, 5, 9);
         List<Integer> diagonale2 = Arrays.asList(3, 5, 7);
 
+        List<List<Integer>> gagnant = ajouterCombinaisonsGagnantes(rangeeHaut, rangeeMilieu, rangeeBas, colonneGauche, colonneMilieu, colonneDroite, diagonale1, diagonale2);
+
+        for (List<Integer> l : gagnant) {
+            if (joueur1.getPositions().containsAll(l)) {
+                joueur1.incrementerNbVictoire();
+                return String.format("%s a gagné!!! Nombre de victoire(s): %d", joueur1.getNom(),
+                        joueur1.getNbVictoire());
+            } else if (joueur2.getPositions().containsAll(l)) {
+                joueur2.incrementerNbVictoire();
+                return String.format("%s a gagné!!! Nombre de victoire(s): %d", joueur2.getNom(),
+                        joueur2.getNbVictoire());
+            } else if (joueur1.getPositions().size() + joueur2.getPositions().size() == 9) {
+                return "Match nul!";
+            }
+        }
+        return resultat;
+    }
+
+    private static List<List<Integer>> ajouterCombinaisonsGagnantes(List<Integer> rangeeHaut, List<Integer> rangeeMilieu, List<Integer> rangeeBas, List<Integer> colonneGauche, List<Integer> colonneMilieu, List<Integer> colonneDroite, List<Integer> diagonale1, List<Integer> diagonale2) {
         List<List<Integer>> gagnant = new ArrayList<>();
         gagnant.add(rangeeHaut);
         gagnant.add(rangeeMilieu);
@@ -138,19 +158,24 @@ public class TicTacToe {
         gagnant.add(colonneDroite);
         gagnant.add(diagonale1);
         gagnant.add(diagonale2);
+        return gagnant;
+    }
 
-        for (List<Integer> l : gagnant) {
-            if (joueur1.getPositions().containsAll(l)) {
-                joueur1.incrementerNbVictoire();
-                return String.format("%s à gagné", joueur1.getNom());
-            } else if (joueur2.getPositions().containsAll(l)) {
-                joueur2.incrementerNbVictoire();
-                return String.format("%s à gagné", joueur2.getNom());
-            } else if (joueur1.getPositions().size() + joueur2.getPositions().size() == 9) {
-                return "Match nul!";
-            }
+    public static char jouerUneAutrePartie(Scanner scan) {
+        System.out.println();
+        char reponse = ' ';
+        System.out.println("Souhaitez-vous jouer une autre partie?");
+        System.out.print("(O ou o pour oui, N ou n pour non)");
+        reponse = scan.next().charAt(0);
+        while (reponse != 'O' && reponse != 'o' && reponse != 'N' && reponse != 'n') {
+            System.out.println();
+            System.out.println("La réponse entrée est invalide");
+            System.out.println();
+            System.out.println("Souhaitez-vous jouer une autre partie?");
+            System.out.println("(O ou o pour oui, N ou n pour non)");
+            reponse = scan.next().charAt(0);
         }
-        return "";
+        return reponse;
     }
 
     public static void main(String[] args) {
@@ -191,19 +216,8 @@ public class TicTacToe {
                     placerSymbole(gameBoard, positionJoueur, joueur1);
 
                     String resultat = determinerGagnant(joueur1, joueur2);
-                    if (resultat.length() > 0) {
-                        System.out.println();
-                        imprimerGameBoard(gameBoard);
-                        System.out.println(resultat);
-                    }
-                    //position joueur
-                    System.out.println("Entrez votre position (1-9)");
-                    int positionJoueur1 = scan.nextInt();
-                    while (joueur1.getPositions().contains(positionJoueur1) || joueur2.getPositions().contains(positionJoueur)) {
-                        System.out.println("La position est deja prise! Entrez une position disponible :");
-                        positionJoueur = scan.nextInt();
-                        System.out.println();
-                    }
+                    imprimerResultat(gameBoard, resultat);
+
                     //position ordinateur
                     Random aleatoire = new Random();
                     int positionOrdinateur = aleatoire.nextInt(9) + 1;
@@ -215,15 +229,13 @@ public class TicTacToe {
                     imprimerGameBoard(gameBoard);
 
                     resultat = determinerGagnant(joueur1, joueur2);
-                    if (resultat.length() > 0) {
-                        System.out.println();
-                        imprimerGameBoard(gameBoard);
-                        System.out.println(resultat);
-                    }
+                    imprimerResultat(gameBoard, resultat);
                     System.out.println(resultat);
                 }
 
             case 2:
+                char reponse = ' ';
+                String resultat = "";
                 nomJoueur1 = saisirNomJoueur(scan, 1);
                 nomJoueur2 = saisirNomJoueur(scan, 2);
 
@@ -235,28 +247,41 @@ public class TicTacToe {
 
                 imprimerGameBoard(gameBoard);
 
-                while (true) {
-                    //position joueur
-                    int positionJoueur = joueur1.entrerPosition(joueur1, scan);
-//                    int positionJoueur = scan.nextInt();
-//                    while (joueur1.getPositions().contains(positionJoueur) || joueur2.getPositions().contains(positionJoueur)) {
-//                        System.out.println("La position est deja prise! Entrez une position disponible :");
-//                        positionJoueur = scan.nextInt();
-//                        System.out.println();
-//                    }
-//                    System.out.println(positionJoueur);
-                    placerSymbole(gameBoard, positionJoueur, joueur1);
-
-                    imprimerGameBoard(gameBoard);
-
-                    String resultat = determinerGagnant(joueur1, joueur2);
-                    if (resultat.length() > 0) {
-                        System.out.println();
+                while (reponse != 'N' && reponse != 'n') {
+                    while (resultat.equals("")) {
+                        int positionJoueur1 = joueur1.entrerPosition(joueur1, scan);
+                        placerSymbole(gameBoard, positionJoueur1, joueur1);
                         imprimerGameBoard(gameBoard);
-                        System.out.println(resultat);
-                    }
 
+                        resultat = determinerGagnant(joueur1, joueur2);
+                        imprimerResultat(gameBoard, resultat);
+                        if(!resultat.equals("")) {
+                            break;
+                        }
+
+                        int positionJoueur2 = joueur2.entrerPosition(joueur2, scan);
+                        placerSymbole(gameBoard, positionJoueur2, joueur2);
+                        imprimerGameBoard(gameBoard);
+
+                        resultat = determinerGagnant(joueur1, joueur2);
+                        imprimerResultat(gameBoard, resultat);
+                        if(!resultat.equals("")) {
+                            break;
+                        }
+                    }
+                    reponse = jouerUneAutrePartie(scan);
+                    resultat = "";
                 }
-           }
+                System.out.println();
+                System.out.println("À la prochaine!!!");
+        }
+    }
+
+    private static void imprimerResultat(char[][] gameBoard, String resultat) {
+        if (resultat.length() > 0) {
+            System.out.println();
+            imprimerGameBoard(gameBoard);
+            System.out.println(resultat);
+        }
     }
 }
