@@ -50,10 +50,6 @@ public class Joueur {
         return positionJoueur;
     }
 
-
-
-
-
     public void incrementerNbVictoire() {
         this.nbVictoire += 1;
     }
